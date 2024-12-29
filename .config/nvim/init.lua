@@ -29,17 +29,11 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- plugins list that will be managed by lazy 
-local plugins = {
-  -- https://github.com/catppuccin/nvim
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-  -- https://github.com/nvim-telescope/telescope.nvim
-  { 'nvim-telescope/telescope.nvim', tag = '0.1.8', dependencies = { 'nvim-lua/plenary.nvim' } }
-}
-local lazy_options = {}
 
+local lazy_options = {}
 -- configuring lazy plugin manager to install other plugins
-require("lazy").setup(plugins, lazy_options)
+-- plugins is defined in lua/plugins.lua
+require("lazy").setup("plugins", lazy_options)
 
 -- https://github.com/catppuccin/nvim
 -- configuring catppuccing for font, colors etc
@@ -57,3 +51,19 @@ vim.keymap.set('n', '<leader>fh', telescope.help_tags, { desc = 'Telescope help 
 -- space fb to switch buffers
 -- space fh for help tags
 
+-- configuring treesitter
+local ts_configs = require("nvim-treesitter.configs")
+
+ts_configs.setup({
+  -- https://github.com/nvim-treesitter/nvim-treesitter?tab=readme-ov-file
+  -- at command prompt :TSInstall java
+  ensure_installed = { "lua", "vim", "vimdoc", "query", "javascript", "html", "bash" , "java"},
+  sync_install = false,
+  highlight = { enable = true },
+  indent = { enable = true },  
+})
+    
+
+-- configuring neovim tree
+-- https://github.com/nvim-neo-tree/neo-tree.nvim
+vim.keymap.set('n', '<c-n>', ':Neotree filesystem reveal left<CR>')
